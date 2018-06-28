@@ -1,0 +1,70 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Components Propiedades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <main id="app">
+        <h1>Vue.js Shows</h1>
+      <show v-for = "show in shows"
+      :name = "show.name"
+      :poster = "show.image.medium"
+      :rating = "show.rating.average"
+      :genres = "show.genres"></show>
+    </main>
+    <template id="show">
+        <figure>
+          <img :src = "poster" :alt = "name">
+          <figcaption>
+              <h3>{{name}}</h3>
+              <p>Calificacion:<b>{{rating}}</b></p>
+              <p>Generos:</p>
+              <ul>
+                  <li v-for = "genre in genres" v-text = "genre"></li>
+              </ul>
+          </figcaption>
+        </figure>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+    Vue.component('show', {
+        props: ['name', 'poster', 'rating', 'genres'],
+        template: '#show',
+
+
+      /*props: {
+        name: {
+          type: String,
+          required: true
+        },
+        poster: String,
+        rating: Number,
+        genres: {
+          type: [String, Array],
+          required: true,
+          default: 'No genre'
+        }
+      }, */
+
+
+    })
+    const mv = new Vue({
+        el: '#app',
+        mounted(){
+            axios.get('http://api.tvmaze.com/shows')
+            .then(res => {
+                console.log(res)
+                this.shows = res.data
+            })
+        },
+        data: {
+            shows: []
+        }
+    })
+    </script>
+</body>
+</html>
